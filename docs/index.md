@@ -37,10 +37,11 @@ Screen shot
 Example screen shot with all the functions enabled (most of the time many of
 these icons will be hidden, and they are shown only when meaningful) :
 
-Features
---------
 
 ![](https://raw.githubusercontent.com/pragma-git/pragma-git/main/images/Pragma-git-screen-shot.png)
+
+Features
+--------
 
 -   Easy overview of current repository, branch and number of changed files
 
