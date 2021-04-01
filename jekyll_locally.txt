@@ -1,0 +1,49 @@
+# Run local jekyll for pragma-git github pages
+
+
+# From https://ddewaele.github.io/running-jekyll-in-docker/
+
+    
+    
+    # Set up and run from inside docker image
+        export JEKYLL_VERSION=3.8
+        docker run --name pragma-git-pages --rm --volume="$PWD:/srv/jekyll"  -p 4000:4000  -it jekyll/jekyll:$JEKYLL_VERSION /bin/bash   
+        
+        bundle update
+    
+        bundle install
+        
+        jekyll serve --watch --drafts
+        
+        
+    
+    
+    # Store state 
+    
+        # Start docker
+        export JEKYLL_VERSION=3.8
+        docker run --rm --volume="$PWD:/srv/jekyll"  -p 4000:4000  -it jekyll/jekyll:$JEKYLL_VERSION /bin/bash  
+        
+        # In docker
+        export PAGES_REPO_NWO=pragma-git/pragma-git;jekyll serve --watch --drafts
+        
+        
+        # Store state (in other terminal, last parameter is stored image name)
+        docker ps
+        docker commit c3f279d17e0a  pragma-git-pages
+        
+    
+        
+        
+    # Run stored state    
+        
+        # Start docker
+        docker run --rm --volume="$PWD:/srv/jekyll"  -p 4000:4000  -it pragma-git-pages /bin/bash
+        
+        # In docker
+        export PAGES_REPO_NWO=pragma-git/pragma-git;jekyll serve --watch --drafts   # Ctrl-C followed by Exit to end
+
+        # Browser
+        http://http://localhost:4000
+    
+
