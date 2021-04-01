@@ -2,7 +2,7 @@
 ### *Pragma-git* 
 
 is a friendly pragmatic *git* control app, *fully compatible* with
-other git client softwares
+other git client softwares .
 
  
 
