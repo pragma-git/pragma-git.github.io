@@ -1,8 +1,7 @@
+### *Pragma-git*
 
-### *Pragma-git* 
-
-is a friendly pragmatic *git* control app, *fully compatible* with
-other git client softwares.
+is a friendly pragmatic *git* control app, *fully compatible* with other git
+client softwares.
 
  
 
@@ -36,7 +35,6 @@ Screen shot
 
 Example screen shot with all the functions enabled (most of the time many of
 these icons will be hidden, and they are shown only when meaningful) :
-
 
 ![](https://raw.githubusercontent.com/pragma-git/pragma-git/main/images/Pragma-git-screen-shot.png)
 
@@ -76,21 +74,30 @@ Features
 Installation
 ------------
 
--   Windows / Mac — [Download
+-   Windows — [Download
     here](https://github.com/pragma-git/pragma-git/releases/latest) and run
     installer
 
+-   Mac — [Download
+    here](https://github.com/pragma-git/pragma-git/releases/latest) and run
+    installer.  Important -- follow "README.txt" on disk image.
+
 -   Linux — download deb or rpm ([Download
     here](https://github.com/pragma-git/pragma-git/releases/latest)). Try to
-    double-click and run.  
-    If that is not allowed (replace `INSTALLATION_FILE` with the path to the
-    installation file):
+    double-click to open system's software installer.  
+    
+    If double-click does not work, use the terminal and `cd` to the folder of the
+    downloaded file. Run command below (replace `INSTALLATION_FILE` with the
+    name of the installation file):
 
     -   Ubuntu, Linux Mint, etc (deb-format) :  
-        `sudo dpkg --install INSTALLATION_FILE`
+        `sudo apt install ./INSTALLFILE # Note the "./" before file name`
 
     -   RedHat, CentOS, Fedora etc (rpm-format) :  
-        `sudo yum localinstall  INSTALLATION_FILE`
+        `sudo dnf install ./INSTALLFILE # Note the "./" before file name`
+
+    -   OpenSUSE, etc (rpm-format) :  
+        `sudo zypper install -y --allow-unsigned-rpm INSTALLFILE`
 
      
 
