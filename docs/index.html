@@ -526,6 +526,13 @@
       line-height: 1.5;
     }
 
+    .download-card .btn-group {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
     .download-card .btn-download {
       width: 100%;
       padding: 11px 0;
@@ -536,11 +543,27 @@
       font-weight: 600;
       font-size: 13px;
       transition: all 0.2s;
+      display: inline-block;
+      text-align: center;
     }
 
-    .download-card:hover .btn-download {
+    .download-card .btn-download:hover {
       background: var(--accent-blue);
       border-color: var(--accent-blue);
+      color: #fff;
+    }
+
+    .download-card .btn-download.btn-sub {
+      background: rgba(255, 255, 255, 0.04);
+      color: #94a3b8;
+      font-size: 12px;
+      padding: 9px 0;
+    }
+
+    .download-card .btn-download.btn-sub:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: var(--card-hover);
+      color: #fff;
     }
 
     /* Linux Code Block */
@@ -915,21 +938,29 @@
           <div class="platform-icon">🪟</div>
           <h4>Windows</h4>
           <p>Windows 10 & 11 (64-bit)<br>Seamless notification tray integration, quick window toggle, and installer.</p>
-          <a href="https://github.com/pragma-git/pragma-git/releases/latest" class="btn-download">Download for Windows</a>
+          <div class="btn-group">
+            <a href="https://github.com/pragma-git/pragma-git/releases/latest/download/Pragma-git-win-x64.exe" class="btn-download">Download Installer (.exe)</a>
+          </div>
         </div>
 
-        <div class="download-card">
+        <div class="download-card" id="mac-download-card">
           <div class="platform-icon">🍎</div>
           <h4>macOS</h4>
-          <p>Apple Silicon (M1/M2/M3/M4) & Intel<br>Signed and notarized .dmg disk image.</p>
-          <a href="https://github.com/pragma-git/pragma-git/releases/latest" class="btn-download">Download for macOS</a>
+          <p>Apple Silicon (M1, M2, ...) & Intel<br>Signed and Apple-notarized disk image (.dmg).</p>
+          <div class="btn-group" id="mac-btn-group">
+            <a id="btn-mac-arm" href="https://github.com/pragma-git/pragma-git/releases/latest/download/Pragma-git-mac-arm64.dmg" class="btn-download">Apple Silicon (M1, M2, ...)</a>
+            <a id="btn-mac-intel" href="https://github.com/pragma-git/pragma-git/releases/latest/download/Pragma-git-mac-x64.dmg" class="btn-download btn-sub">Intel Mac (.dmg)</a>
+          </div>
         </div>
 
         <div class="download-card">
           <div class="platform-icon">🐧</div>
           <h4>Linux</h4>
-          <p>Debian, Ubuntu, Mint, Fedora, RedHat, openSUSE<br>Native .deb and .rpm packages available.</p>
-          <a href="https://github.com/pragma-git/pragma-git/releases/latest" class="btn-download">Download for Linux</a>
+          <p>Debian, Ubuntu, Mint, Fedora, RedHat, openSUSE<br>Native packages for 64-bit Linux.</p>
+          <div class="btn-group">
+            <a href="https://github.com/pragma-git/pragma-git/releases/latest/download/Pragma-git-linux-x64.deb" class="btn-download">Download .deb (Ubuntu/Debian)</a>
+            <a href="https://github.com/pragma-git/pragma-git/releases/latest/download/Pragma-git-linux-x64.rpm" class="btn-download btn-sub">Download .rpm (Fedora/SUSE)</a>
+          </div>
         </div>
       </div>
 
@@ -961,6 +992,72 @@
       <p>Pragma-git is free and open-source software released under the MIT License.</p>
     </div>
   </footer>
+
+  <script>
+    // Automatic detection for Apple Silicon vs Intel Mac
+    (function detectMacArchitecture() {
+      try {
+        const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0 || 
+                      (navigator.userAgentData && navigator.userAgentData.platform === 'macOS');
+        if (!isMac) return;
+
+        let isAppleSilicon = false;
+
+        // Modern User-Agent Client Hints API (Chrome / Edge / Chromium)
+        if (navigator.userAgentData && navigator.userAgentData.getHighEntropyValues) {
+          navigator.userAgentData.getHighEntropyValues(['architecture']).then(function(hints) {
+            if (hints.architecture === 'arm') {
+              highlightMacButton(true);
+            } else if (hints.architecture === 'x86') {
+              highlightMacButton(false);
+            } else {
+              detectViaWebGL();
+            }
+          }).catch(function() {
+            detectViaWebGL();
+          });
+        } else {
+          detectViaWebGL();
+        }
+
+        function detectViaWebGL() {
+          try {
+            const canvas = document.createElement('canvas');
+            const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+            if (gl) {
+              const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+              if (debugInfo) {
+                const renderer = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
+                if (renderer && /Apple/i.test(renderer)) {
+                  isAppleSilicon = true;
+                }
+              }
+            }
+          } catch(e) {}
+          highlightMacButton(isAppleSilicon);
+        }
+
+        function highlightMacButton(isArm) {
+          const btnArm = document.getElementById('btn-mac-arm');
+          const btnIntel = document.getElementById('btn-mac-intel');
+          const btnGroup = document.getElementById('mac-btn-group');
+          if (!btnArm || !btnIntel || !btnGroup) return;
+
+          if (isArm) {
+            btnArm.className = 'btn-download';
+            btnArm.innerHTML = 'Apple Silicon (Recommended) ★';
+            btnIntel.className = 'btn-download btn-sub';
+            btnGroup.insertBefore(btnArm, btnIntel);
+          } else {
+            btnIntel.className = 'btn-download';
+            btnIntel.innerHTML = 'Intel Mac (Recommended) ★';
+            btnArm.className = 'btn-download btn-sub';
+            btnGroup.insertBefore(btnIntel, btnArm);
+          }
+        }
+      } catch (err) {}
+    })();
+  </script>
 
 </body>
 </html>
